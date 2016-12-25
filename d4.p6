@@ -8,20 +8,24 @@ my @rooms = "aaaaa-bbb-z-y-x-123[abxyz]",
 
 my $sum_id = 0;
 for @rooms -> $room {
-    $room ~~ /(<[a..z -]>+) (\d+) \[(\w+)\]/;
-    say "first: $0, id: $1 checksum: $2";
-    my @chs = split("-", $0).join.split("", :skip-empty);
-
-    # TODO sort
-    
+    my ($a, $b, $c) = ($room ~~ /(<[a..z -]>+) (\d+) \[(\w+)\]/);
     my $id = $1;
     my $checksum = $2;
-    if $chs ~~ /^$checksum/ {
-        #if $chs ~~ /^abxyz/ {
+    my @chs = split("", $0.subst(/\-/, "", :g), :skip-empty);
+
+    say "read string " ~ @chs.join ~ ", id: $id checksum: $checksum";
+
+    my %chs;
+    for @chs.sort -> $ch {
+        %chs{$ch} = %chs{$ch} ?? %chs{$ch} + 1 !! 1;
+    }
+    my @sorted = %chs.keys.sort( { %chs{$^b} <=> %chs{$^a} || $^a cmp $^b } );
+
+    if @sorted.join ~~ /^$checksum/ {
         $sum_id += $id;
     }
     else {
-        say "room $room is a decoy: $chs vs $checksum";
+        say "room $room is a decoy: " ~ @sorted.join ~ " vs " ~ $checksum;
     }
 }
 
