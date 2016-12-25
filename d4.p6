@@ -1,5 +1,26 @@
 use v6;
 
+sub decrypt_room(Str $encrypted, Int $shifts)
+{
+    my $charspace = 26;
+    my $realshifts = $shifts % $charspace;
+
+    (for $encrypted.subst(/\-/, " ", :g).split(/""/, :skip_empty) -> $ch {
+        if !$ch {
+            next;
+        }
+
+        if $ch eq " " {
+            $ch
+        }
+        else {
+        ($ch.ord + $realshifts < "a".ord + $charspace ??
+                $ch.ord + $realshifts !! $ch.ord + $realshifts - $charspace)
+            .chr;
+        }
+    }).join;
+}
+
 my $base = $*PROGRAM-NAME.split(/\./)[0];
 sub MAIN(Str :$inputfile = "$base.in")
 {
@@ -9,6 +30,7 @@ sub MAIN(Str :$inputfile = "$base.in")
     for $inputfile.IO.lines -> $room {
 
         $room ~~ /(<[a..z -]>+) (\d+) \[(\w+)\]/;
+        my $room_string = $0;
         my ($id, $checksum, @chs)  = ($1, $2, |split("", $0.subst(/\-/, "", :g), :skip-empty));
 
         #say "read string " ~ @chs.join ~ ", id: $id checksum: $checksum";
@@ -21,6 +43,10 @@ sub MAIN(Str :$inputfile = "$base.in")
 
         if @sorted.join ~~ /^$checksum/ {
             $sum_id += $id;
+            my $realname = decrypt_room($room_string.Str, $id.abs);
+            if $realname ~~ /north\s*pole/ {
+                say "$realname has id $id";
+            }
         }
         else {
             @decoys.push(@sorted.join);
@@ -29,4 +55,5 @@ sub MAIN(Str :$inputfile = "$base.in")
 
     say $sum_id;
     say "Decoys: " ~ @decoys.elems;
+
 }
