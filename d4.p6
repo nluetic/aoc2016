@@ -1,3 +1,10 @@
+# 
+# find invalid rooms (decoys)
+#
+# checksum has to contain 5 chars from string sorted by frequency first, then alphabetically
+#
+# part 2: find valid room that contains something with "North Pole" in it
+#
 use v6;
 
 sub decrypt_room(Str $encrypted, Int $shifts)
