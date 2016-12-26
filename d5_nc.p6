@@ -1,3 +1,10 @@
+# 
+# simple password: first index after any md5 starting with 5 x 0 is the character
+# not so simple password: first index after any md5 starting with 5 x 0 gives index, if valid,
+# next one gives character
+#
+# 8 characters required
+#
 use v6;
 use NativeCall;
 
