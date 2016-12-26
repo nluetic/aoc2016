@@ -1,5 +1,9 @@
 /*
  * from http://stackoverflow.com/questions/7627723/how-to-create-a-md5-hash-of-a-string-in-c
+ *
+ * The functions are located in libcrypto.so, which is in Debian package libssl (libssl1.0.0),
+ * headers in libssl-dev
+ *
  * create a shared library for use with perl native call:
  * cc -L /usr/lib/x86_64-linux-gnu/ -fPIC -c d5_md5.c -lcrypto 
  * cc -shared -L /usr/lib/x86_64-linux-gnu/ d5_md5.o -lcrypto -o libd5_md5.so
