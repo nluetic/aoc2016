@@ -16,22 +16,28 @@ my @pw_notsosimple = "";
 
 for 0..Inf -> $suffix {
 
-    my $hvalue = md5_get($door_id ~ $suffix);
-    if $hvalue ~~ /^00000(<[0..9a..f]>)(<[0..9a..f]>)/ {
-        my ($first, $second) = ( $0, $1 );
-        say "Hvalue $hvalue, Suffix $suffix";
-        if $pw_simple.chars < 8 {
-            $pw_simple = $pw_simple ~ $first; 
-            say "added $first to simple pw: $pw_simple";
-        }
-        if ! ($first ~~ /<[a..f]>/) && $first >= 0 && $first <= 7 && !@pw_notsosimple[$first] {
-            @pw_notsosimple[$first] = $second;
-            say "added $second to index $first of notsosimple pw:" ~ @pw_notsosimple.join;
-        }
-        if $pw_simple.chars == 8 && @pw_notsosimple.join.chars == 8 {
-            last;
-        }
+  my $hvalue = md5_get($door_id ~ $suffix);
+
+  if $hvalue ~~ /^00000(<[0..9a..f]>)(<[0..9a..f]>)/ {
+
+    my ($first, $second) = ( $0, $1 );
+
+    say "Hvalue $hvalue, Suffix $suffix";
+
+    if $pw_simple.chars < 8 {
+      $pw_simple = $pw_simple ~ $first; 
+      say "added $first to simple pw: $pw_simple";
     }
+
+    if $first ~~ /<[0..7]>/ && !@pw_notsosimple[$first] {
+      @pw_notsosimple[$first] = $second;
+      say "added $second to index $first of notsosimple pw:" ~ @pw_notsosimple.join;
+    }
+
+    if $pw_simple.chars == 8 && @pw_notsosimple.join.chars == 8 {
+      last;
+    }
+  }
 }
 say "simple: $pw_simple, not so simple " ~ @pw_notsosimple.join;
 
