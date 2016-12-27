@@ -16,6 +16,7 @@ sub MAIN(Str :$inputfile = "$base.in")
     }
 
     my $message = "";
+    my $message2 = "";
     for 0..^@lines[0].chars -> $column {
         my %chs;
         for 0..^@lines.elems -> $line {
@@ -24,7 +25,9 @@ sub MAIN(Str :$inputfile = "$base.in")
         }
         my @sorted = %chs.keys.sort( { %chs{$^b} <=> %chs{$^a} } );
         $message = $message ~ @sorted[0];
+        $message2 = $message2 ~ @sorted[@sorted.elems - 1];
     }
     say $message;
+    say $message2;
 }
 
