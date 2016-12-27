@@ -12,14 +12,13 @@ sub MAIN(Str :$inputfile = "$base.in")
 
         my @states = $line.split("", :skip-empty);
 
-        my %ssl_match;
         my Bool $mode = True;
         my Bool $tls  = False;
         my Bool $tls_done  = False;
         my Bool $ssl  = False;
         my Bool $ssl_done  = False;
-
         my %ssl_babs;
+
         for @states.keys -> $index {
 
             if @states[$index] eq "[" {
