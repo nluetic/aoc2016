@@ -2,6 +2,9 @@
 # grammar example code adapted from 
 # https://perl6advent.wordpress.com/2009/12/21/day-21-grammars-and-actions/
 #
+# algorithm from:
+# https://stackoverflow.com/questions/876293/fastest-algorithm-for-circle-shift-n-sized-array-for-m-position ("Optimal solution")
+#
 # grammar, multidimensional arrays
 #
 use v6;
@@ -29,27 +32,28 @@ class display::Actions {
 
         my $max = ($what eq "column") ?? $!max_rows !! $!max_columns;
 
-        my $gcd = ($count gcd $max);
-        for 0..^$gcd -> $dimension {
+        if $count == 0 || $count == $max {
+            return;
+        }
+
+        for 0..^($count gcd $max) -> $dimension {
 
             my $tmp;
             my ($x1, $x2);
             my ($y1, $y2);
+
             my ($i, $j);
             loop ($i = $dimension; 1; $i = $j) {
 
-                if $j.defined {
-                    $i = $j;
-                }
-
                 $j = $i + $count;
-
                 if $j >= $max {
                    $j -= $max;
                 }
+
                 if $j == $dimension {
                     last;
                 }
+
                 ($x1, $x2) = ($which, $which);
                 ($y1, $y2) = ($i, $j);
                 if $what eq "row" {
@@ -115,19 +119,10 @@ grammar display::Grammar {
     }
 }
 
-my $inputfile = $*PROGRAM-NAME.split(/\./)[0] ~ ".in";
-my $input = slurp $inputfile;
-
-#my $input = Q {
-#rect 1x1
-#rotate row y=0 by 6
-#rect 1x1
-#rotate row y=0 by 3
-#};
-
+my $input = slurp $*PROGRAM-NAME.split(/\./)[0] ~ ".in";
 my $actions     = display::Actions.new();
+
 my $matchobject = display::Grammar.parse($input, :actions($actions));
 
 $actions.show();
 $actions.count();
-# 94 too low
