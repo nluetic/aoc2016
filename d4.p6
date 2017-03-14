@@ -1,4 +1,4 @@
-# 
+#
 # find invalid rooms (decoys)
 #
 # checksum has to contain 5 chars from string sorted by frequency first, then alphabetically

@@ -1,4 +1,4 @@
-# 
+#
 # simple password: first index after any md5 starting with 5 x 0 is the character
 # not so simple password: first index after any md5 starting with 5 x 0 gives index, if valid,
 # next one gives character
@@ -25,7 +25,7 @@ for 0..Inf -> $suffix {
     say "Hvalue $hvalue, Suffix $suffix";
 
     if $pw_simple.chars < 8 {
-      $pw_simple = $pw_simple ~ $first; 
+      $pw_simple = $pw_simple ~ $first;
       say "added $first to simple pw: $pw_simple";
     }
 

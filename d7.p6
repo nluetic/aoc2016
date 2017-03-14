@@ -37,8 +37,8 @@ sub MAIN(Str :$inputfile = "$base.in")
 
             # part 1: ABBA
             if !$tls_done {
-                if @states[$index+3] && 
-                 @states[$index]   ne @states[$index+1] && 
+                if @states[$index+3] &&
+                 @states[$index]   ne @states[$index+1] &&
                  @states[$index+1] eq @states[$index+2] &&
                  @states[$index]   eq @states[$index+3] {
 
@@ -51,8 +51,8 @@ sub MAIN(Str :$inputfile = "$base.in")
 
             if !$ssl_done {
                 # part 2: BAB
-                if @states[$index+2] && 
-                 @states[$index]   ne @states[$index+1] && 
+                if @states[$index+2] &&
+                 @states[$index]   ne @states[$index+1] &&
                  @states[$index]   eq @states[$index+2] {
      
                     my $key;

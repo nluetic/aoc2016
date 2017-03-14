@@ -1,4 +1,4 @@
-# 
+#
 # find string consisting of the letters occuring most frequently per column
 #
 use v6;

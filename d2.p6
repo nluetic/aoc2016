@@ -16,13 +16,13 @@ for split("\n", $inputs, :skip-empty) -> $line {
     push @input, @movements;
 }
 
-my @grid1[;] = ( [1..3], 
-                 [4..6], 
+my @grid1[;] = ( [1..3],
+                 [4..6],
                  [7..9]);
 
-my @grid2[;] = ( [Nil,Nil,1,Nil,Nil], 
-                 [Nil,2,3,4,Nil], 
-                 [5,6,7,8,9], 
+my @grid2[;] = ( [Nil,Nil,1,Nil,Nil],
+                 [Nil,2,3,4,Nil],
+                 [5,6,7,8,9],
                  [ Nil, 'A', 'B', 'C', Nil],
                  [ Nil, Nil, 'D', Nil, Nil],
                );
@@ -35,11 +35,11 @@ sub get_code(int :$x is copy, int :$y is copy, :@grid) {
             given $movement {
                 when 'U'
                     { $y-- if @grid[$y-1;$x]; }
-                when 'D' 
+                when 'D'
                     { $y++ if @grid[$y+1;$x]; }
-                when 'R' 
+                when 'R'
                     { $x++ if @grid[$y;$x+1]; }
-                when 'L' 
+                when 'L'
                     { $x-- if @grid[$y;$x-1]; }
                 default
                     { say "invalid movement $movement!"; }

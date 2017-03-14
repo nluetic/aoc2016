@@ -1,5 +1,5 @@
 #
-# grammar example code adapted from 
+# grammar example code adapted from
 # https://perl6advent.wordpress.com/2009/12/21/day-21-grammars-and-actions/
 #
 # algorithm from:
@@ -10,14 +10,14 @@
 use v6;
 
 class display::Actions {
-    has Int $!max_columns = 50;
-    has Int $!max_rows = 6;
-    # TODO: why does this not work?
-    #has @!screen[$!max_rows;$!max_columns];
+    has Int $.columns;
+    has Int $.rows;
+    # TODO: should be shaped according to dimensions given
+    #has $!screen .= new(($!columns,$!rows));
     has @!screen[50;6];
 
     submethod TWEAK() {
-        @!screen = ( for 0..^$!max_columns { (for 0..^$!max_rows { 0 }) } );
+        @!screen = ( for 0..^$!columns { (for 0..^$!rows { 0 }) } );
     }
 
     method rect($/) {
@@ -30,7 +30,7 @@ class display::Actions {
 
     method !rotate(Str $what, Int $which, Int $count) {
 
-        my $max = ($what eq "column") ?? $!max_rows !! $!max_columns;
+        my $max = ($what eq "column") ?? $!rows !! $!columns;
 
         if $count == 0 || $count == $max {
             return;
@@ -61,13 +61,13 @@ class display::Actions {
                     ($x1, $y1) = ($y1, $x1);
                 }
 
-                if ($what eq "row" && $x1 == $dimension  || 
+                if ($what eq "row" && $x1 == $dimension  ||
                     $what eq "column" && $y1 == $dimension ) {
                     $tmp = @!screen[$x1;$y1];
                 }
 
                 @!screen[$x1;$y1] = @!screen[$x2;$y2];
-            } 
+            }
 
             if $x2.defined {
                 @!screen[$x2;$y2] = $tmp;
@@ -76,16 +76,16 @@ class display::Actions {
     }
 
     method rotate_column($/) {
-        self!rotate("column", +(~$<which>), $!max_rows - +(~$<count>));
+        self!rotate("column", +(~$<which>), $!rows - +(~$<count>));
     }
     method rotate_row($/) {
-        self!rotate("row", +(~$<which>), $!max_columns - +(~$<count>));
+        self!rotate("row", +(~$<which>), $!columns - +(~$<count>));
     }
 
     method show() {
         say "current screen:";
-        for 0..^$!max_rows -> $row {
-            for 0..^$!max_columns -> $column {
+        for 0..^$!rows -> $row {
+            for 0..^$!columns -> $column {
                 print @!screen[$column;$row];
             }
             say "";
@@ -105,10 +105,10 @@ grammar display::Grammar {
     token   action {
         <rect>|<rotate>
     }
-    token   rect {  
+    token   rect {
         $<type>=[rect]\s+ $<x>=[\d+]x$<y>=[\d+]
     }
-    token   rotate {  
+    token   rotate {
         <rotate_column>|<rotate_row>
     }
     token   rotate_column {
@@ -120,7 +120,7 @@ grammar display::Grammar {
 }
 
 my $input = slurp $*PROGRAM-NAME.split(/\./)[0] ~ ".in";
-my $actions     = display::Actions.new();
+my $actions     = display::Actions.new(columns => 50, rows => 6);
 
 my $matchobject = display::Grammar.parse($input, :actions($actions));
 
