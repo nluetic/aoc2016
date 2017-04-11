@@ -12,18 +12,20 @@ use v6;
 class display::Actions {
     has Int $.columns;
     has Int $.rows;
-    # TODO: should be shaped according to dimensions given
-    #has $!screen .= new(($!columns,$!rows));
-    has @!screen[50;6];
+    has Array $!screen .= new(:shape($!columns,$!rows));
 
     submethod TWEAK() {
-        @!screen = ( for 0..^$!columns { (for 0..^$!rows { 0 }) } );
+        for 0..^$!columns -> $column {
+            for 0..^$!rows -> $row {
+                $!screen[$column;$row] = 0;
+            }
+        }
     }
 
     method rect($/) {
         for 0..^~$<x> -> $column {
             for 0..^~$<y> -> $row {
-                @!screen[$column;$row] = 1;
+                $!screen[$column;$row] = 1;
             }
         }
     }
@@ -63,14 +65,14 @@ class display::Actions {
 
                 if ($what eq "row" && $x1 == $dimension  ||
                     $what eq "column" && $y1 == $dimension ) {
-                    $tmp = @!screen[$x1;$y1];
+                    $tmp = $!screen[$x1;$y1];
                 }
 
-                @!screen[$x1;$y1] = @!screen[$x2;$y2];
+                $!screen[$x1;$y1] = $!screen[$x2;$y2];
             }
 
             if $x2.defined {
-                @!screen[$x2;$y2] = $tmp;
+                $!screen[$x2;$y2] = $tmp;
             }
         }
     }
@@ -86,13 +88,13 @@ class display::Actions {
         say "current screen:";
         for 0..^$!rows -> $row {
             for 0..^$!columns -> $column {
-                print @!screen[$column;$row];
+                print $!screen[$column;$row];
             }
             say "";
         }
     }
     method count() {
-        say @!screen.sum();
+        say $!screen.sum();
     }
 }
 
